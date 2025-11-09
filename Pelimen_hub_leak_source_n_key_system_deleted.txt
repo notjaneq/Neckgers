@@ -1,0 +1,1021 @@
+local plr = game.Players.LocalPlayer
+local uis = game:GetService("UserInputService")
+local run = game:GetService("RunService")
+local sg = game:GetService("StarterGui")
+local tw = game:GetService("TweenService")
+
+local SETTINGS = {
+    KingMode = false,
+    SuperJump = false,
+    NoClip = false,
+    FlyMode = false,
+    SpeedBoost = false,
+    InfiniteStamina = false,
+    ClickTP = false,
+    Fullbright = false,
+    AntiAFK = false,
+    ESPMen = false,
+    ESPTime = false,
+    ESPName = false,
+    ESPDistance = false,
+    ESPHealthBar = false,
+    Tracers = false,
+    SpeedValue = 50,
+    FOVValue = 70,
+}
+
+local currentTab = "Main"
+local flySpeed = 1
+local originalFOV = 70
+local scriptLoaded = false
+
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "ThirstLeak"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local function tween(obj, props, time)
+    local tweenInfo = TweenInfo.new(time or 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    tw:Create(obj, tweenInfo, props):Play()
+end
+
+local function notify(title, text, duration)
+    sg:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 3
+    })
+end
+
+local loaderFrame = Instance.new("Frame", gui)
+loaderFrame.Name = "LoaderFrame"
+loaderFrame.Size = UDim2.new(0, 320, 0, 200)
+loaderFrame.Position = UDim2.new(0.5, -160, 0.5, -100)
+loaderFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+loaderFrame.BorderSizePixel = 0
+loaderFrame.Active = true
+loaderFrame.Draggable = true
+loaderFrame.ZIndex = 1000
+
+local loaderCorner = Instance.new("UICorner", loaderFrame)
+loaderCorner.CornerRadius = UDim.new(0, 15)
+
+local loaderStroke = Instance.new("UIStroke", loaderFrame)
+loaderStroke.Color = Color3.fromRGB(255, 50, 120)
+loaderStroke.Thickness = 2
+loaderStroke.Transparency = 0.3
+
+local loaderGlow = Instance.new("ImageLabel", loaderFrame)
+loaderGlow.Size = UDim2.new(1, 30, 1, 30)
+loaderGlow.Position = UDim2.new(0, -15, 0, -15)
+loaderGlow.BackgroundTransparency = 1
+loaderGlow.Image = "rbxassetid://4996891970"
+loaderGlow.ImageColor3 = Color3.fromRGB(255, 50, 120)
+loaderGlow.ImageTransparency = 0.6
+loaderGlow.ZIndex = 999
+
+spawn(function()
+    while loaderFrame and loaderFrame.Parent do
+        tween(loaderGlow, {ImageTransparency = 0.3}, 0.8)
+        wait(0.8)
+        if not loaderFrame or not loaderFrame.Parent then break end
+        tween(loaderGlow, {ImageTransparency = 0.8}, 0.8)
+        wait(0.8)
+    end
+end)
+
+local loaderTitle = Instance.new("TextLabel", loaderFrame)
+loaderTitle.Size = UDim2.new(1, 0, 0, 45)
+loaderTitle.Position = UDim2.new(0, 0, 0, 15)
+loaderTitle.BackgroundTransparency = 1
+loaderTitle.Text = "L SCRIPT"
+loaderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+loaderTitle.Font = Enum.Font.GothamBold
+loaderTitle.TextSize = 28
+
+local loaderSubtitle = Instance.new("TextLabel", loaderFrame)
+loaderSubtitle.Size = UDim2.new(1, 0, 0, 25)
+loaderSubtitle.Position = UDim2.new(0, 0, 0, 60)
+loaderSubtitle.BackgroundTransparency = 1
+loaderSubtitle.Text = "WITH KEY"
+loaderSubtitle.TextColor3 = Color3.fromRGB(255, 50, 120)
+loaderSubtitle.Font = Enum.Font.GothamBold
+loaderSubtitle.TextSize = 16
+
+local loaderCredit = Instance.new("TextLabel", loaderFrame)
+loaderCredit.Size = UDim2.new(1, 0, 0, 20)
+loaderCredit.Position = UDim2.new(0, 0, 0, 85)
+loaderCredit.BackgroundTransparency = 1
+loaderCredit.Text = "MADE BY AI SKID"
+loaderCredit.TextColor3 = Color3.fromRGB(150, 150, 150)
+loaderCredit.Font = Enum.Font.Gotham
+loaderCredit.TextSize = 12
+
+local loadBtn = Instance.new("TextButton", loaderFrame)
+loadBtn.Size = UDim2.new(0, 260, 0, 50)
+loadBtn.Position = UDim2.new(0, 30, 0, 125)
+loadBtn.Text = "🚀 LOAD LEAK"
+loadBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 120)
+loadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadBtn.Font = Enum.Font.GothamBold
+loadBtn.TextSize = 18
+loadBtn.BorderSizePixel = 0
+loadBtn.AutoButtonColor = false
+
+local loadBtnCorner = Instance.new("UICorner", loadBtn)
+loadBtnCorner.CornerRadius = UDim.new(0, 10)
+
+local loadBtnGlow = Instance.new("UIStroke", loadBtn)
+loadBtnGlow.Color = Color3.fromRGB(255, 100, 150)
+loadBtnGlow.Thickness = 2
+loadBtnGlow.Transparency = 0.5
+
+loadBtn.MouseEnter:Connect(function()
+    tween(loadBtn, {BackgroundColor3 = Color3.fromRGB(255, 80, 140), Size = UDim2.new(0, 265, 0, 52)}, 0.2)
+end)
+
+loadBtn.MouseLeave:Connect(function()
+    tween(loadBtn, {BackgroundColor3 = Color3.fromRGB(255, 50, 120), Size = UDim2.new(0, 260, 0, 50)}, 0.2)
+end)
+
+local iconBtn = Instance.new("TextButton", gui)
+iconBtn.Name = "IconButton"
+iconBtn.Size = UDim2.new(0, 60, 0, 60)
+iconBtn.Position = UDim2.new(0, 15, 0, 15)
+iconBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+iconBtn.BorderSizePixel = 0
+iconBtn.AutoButtonColor = false
+iconBtn.Text = ""
+iconBtn.Visible = false
+iconBtn.ZIndex = 500
+
+local iconCorner = Instance.new("UICorner", iconBtn)
+iconCorner.CornerRadius = UDim.new(0, 15)
+
+local iconText = Instance.new("TextLabel", iconBtn)
+iconText.Size = UDim2.new(1, 0, 1, 0)
+iconText.BackgroundTransparency = 1
+iconText.Text = "T"
+iconText.TextColor3 = Color3.fromRGB(255, 50, 120)
+iconText.Font = Enum.Font.GothamBold
+iconText.TextSize = 36
+iconText.ZIndex = 501
+
+local iconGlow = Instance.new("ImageLabel", iconBtn)
+iconGlow.Size = UDim2.new(1, 20, 1, 20)
+iconGlow.Position = UDim2.new(0, -10, 0, -10)
+iconGlow.BackgroundTransparency = 1
+iconGlow.Image = "rbxassetid://4996891970"
+iconGlow.ImageColor3 = Color3.fromRGB(255, 50, 120)
+iconGlow.ImageTransparency = 0.5
+iconGlow.ZIndex = 499
+
+spawn(function()
+    while iconBtn and iconBtn.Parent do
+        tween(iconGlow, {ImageTransparency = 0.3}, 0.5)
+        wait(0.5)
+        if not iconBtn or not iconBtn.Parent then break end
+        tween(iconGlow, {ImageTransparency = 0.7}, 0.5)
+        wait(0.5)
+    end
+end)
+
+local mainFrame = Instance.new("Frame", gui)
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(0, 550, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -275, 0.5, -200)
+mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+mainFrame.Visible = false
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.BorderSizePixel = 0
+mainFrame.ClipsDescendants = true
+mainFrame.ZIndex = 100
+
+local mainCorner = Instance.new("UICorner", mainFrame)
+mainCorner.CornerRadius = UDim.new(0, 20)
+
+local mainGradient = Instance.new("UIGradient", mainFrame)
+mainGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 45)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
+}
+mainGradient.Rotation = 135
+
+local mainStroke = Instance.new("UIStroke", mainFrame)
+mainStroke.Color = Color3.fromRGB(255, 50, 120)
+mainStroke.Thickness = 3
+mainStroke.Transparency = 0.3
+
+local header = Instance.new("Frame", mainFrame)
+header.Size = UDim2.new(1, 0, 0, 60)
+header.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+header.BorderSizePixel = 0
+header.ZIndex = 101
+
+local headerCorner = Instance.new("UICorner", header)
+headerCorner.CornerRadius = UDim.new(0, 20)
+
+local headerTitle = Instance.new("TextLabel", header)
+headerTitle.Size = UDim2.new(0, 300, 1, 0)
+headerTitle.Position = UDim2.new(0, 20, 0, 0)
+headerTitle.BackgroundTransparency = 1
+headerTitle.Text = "Leaked By Thirst"
+headerTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+headerTitle.Font = Enum.Font.GothamBold
+headerTitle.TextSize = 20
+headerTitle.TextXAlignment = Enum.TextXAlignment.Left
+headerTitle.ZIndex = 102
+
+local headerSub = Instance.new("TextLabel", header)
+headerSub.Size = UDim2.new(0, 200, 1, 0)
+headerSub.Position = UDim2.new(0, 195, 0, 0)
+headerSub.BackgroundTransparency = 1
+headerSub.Text = "discord.gg/GSTfEVvwDK"
+headerSub.TextColor3 = Color3.fromRGB(255, 50, 120)
+headerSub.Font = Enum.Font.Gotham
+headerSub.TextSize = 11
+headerSub.TextXAlignment = Enum.TextXAlignment.Left
+headerSub.ZIndex = 102
+
+local closeBtn = Instance.new("TextButton", header)
+closeBtn.Size = UDim2.new(0, 40, 0, 40)
+closeBtn.Position = UDim2.new(1, -50, 0, 10)
+closeBtn.Text = "✕"
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 20
+closeBtn.BorderSizePixel = 0
+closeBtn.ZIndex = 102
+
+local closeBtnCorner = Instance.new("UICorner", closeBtn)
+closeBtnCorner.CornerRadius = UDim.new(0, 10)
+
+local tabContainer = Instance.new("Frame", mainFrame)
+tabContainer.Size = UDim2.new(0, 130, 0, 320)
+tabContainer.Position = UDim2.new(0, 10, 0, 70)
+tabContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
+tabContainer.BorderSizePixel = 0
+tabContainer.ZIndex = 101
+
+local tabCorner = Instance.new("UICorner", tabContainer)
+tabCorner.CornerRadius = UDim.new(0, 15)
+
+local contentFrame = Instance.new("Frame", mainFrame)
+contentFrame.Size = UDim2.new(0, 390, 0, 320)
+contentFrame.Position = UDim2.new(0, 150, 0, 70)
+contentFrame.BackgroundTransparency = 1
+contentFrame.BorderSizePixel = 0
+contentFrame.ZIndex = 101
+
+local tabs = {"Main", "Movement", "ESP", "Visual", "Teleport", "Info"}
+local tabButtons = {}
+
+local function createTab(name, icon, index)
+    local btn = Instance.new("TextButton", tabContainer)
+    btn.Size = UDim2.new(1, -10, 0, 45)
+    btn.Position = UDim2.new(0, 5, 0, 5 + (index * 50))
+    btn.Text = icon .. " " .. name
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
+    btn.TextColor3 = Color3.fromRGB(150, 150, 150)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 14
+    btn.BorderSizePixel = 0
+    btn.AutoButtonColor = false
+    btn.TextXAlignment = Enum.TextXAlignment.Center
+    btn.ZIndex = 102
+    
+    local btnCorner = Instance.new("UICorner", btn)
+    btnCorner.CornerRadius = UDim.new(0, 10)
+    
+    tabButtons[name] = btn
+    
+    btn.MouseButton1Click:Connect(function()
+        currentTab = name
+        for tabName, tabBtn in pairs(tabButtons) do
+            if tabName == name then
+                tween(tabBtn, {BackgroundColor3 = Color3.fromRGB(255, 50, 120), TextColor3 = Color3.fromRGB(255, 255, 255)})
+            else
+                tween(tabBtn, {BackgroundColor3 = Color3.fromRGB(30, 30, 50), TextColor3 = Color3.fromRGB(150, 150, 150)})
+            end
+        end
+        for _, child in pairs(contentFrame:GetChildren()) do
+            if child:IsA("ScrollingFrame") then
+                child.Visible = false
+            end
+        end
+        local targetFrame = contentFrame:FindFirstChild(name .. "Content")
+        if targetFrame then
+            targetFrame.Visible = true
+        end
+    end)
+    
+    return btn
+end
+
+createTab("Main", "🏠", 0)
+createTab("Movement", "🏃", 1)
+createTab("ESP", "👁️", 2)
+createTab("Visual", "🎨", 3)
+createTab("Teleport", "📍", 4)
+createTab("Info", "ℹ️", 5)
+
+local function createToggle(parent, text, key, posY)
+    local container = Instance.new("Frame", parent)
+    container.Size = UDim2.new(1, -20, 0, 35)
+    container.Position = UDim2.new(0, 10, 0, posY)
+    container.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
+    container.BorderSizePixel = 0
+    container.ZIndex = 103
+    
+    local containerCorner = Instance.new("UICorner", container)
+    containerCorner.CornerRadius = UDim.new(0, 10)
+    
+    local label = Instance.new("TextLabel", container)
+    label.Size = UDim2.new(0, 250, 1, 0)
+    label.Position = UDim2.new(0, 15, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.ZIndex = 104
+    
+    local toggle = Instance.new("TextButton", container)
+    toggle.Size = UDim2.new(0, 50, 0, 25)
+    toggle.Position = UDim2.new(1, -60, 0.5, -12.5)
+    toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+    toggle.Text = ""
+    toggle.BorderSizePixel = 0
+    toggle.AutoButtonColor = false
+    toggle.ZIndex = 104
+    
+    local toggleCorner = Instance.new("UICorner", toggle)
+    toggleCorner.CornerRadius = UDim.new(1, 0)
+    
+    local indicator = Instance.new("Frame", toggle)
+    indicator.Size = UDim2.new(0, 21, 0, 21)
+    indicator.Position = UDim2.new(0, 2, 0.5, -10.5)
+    indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    indicator.BorderSizePixel = 0
+    indicator.ZIndex = 105
+    
+    local indicatorCorner = Instance.new("UICorner", indicator)
+    indicatorCorner.CornerRadius = UDim.new(1, 0)
+    
+    toggle.MouseButton1Click:Connect(function()
+        SETTINGS[key] = not SETTINGS[key]
+        if SETTINGS[key] then
+            tween(indicator, {Position = UDim2.new(1, -23, 0.5, -10.5)})
+            tween(toggle, {BackgroundColor3 = Color3.fromRGB(255, 50, 120)})
+        else
+            tween(indicator, {Position = UDim2.new(0, 2, 0.5, -10.5)})
+            tween(toggle, {BackgroundColor3 = Color3.fromRGB(60, 60, 80)})
+        end
+    end)
+end
+
+for _, tabName in ipairs(tabs) do
+    local content = Instance.new("ScrollingFrame", contentFrame)
+    content.Name = tabName .. "Content"
+    content.Size = UDim2.new(1, 0, 1, 0)
+    content.BackgroundTransparency = 1
+    content.BorderSizePixel = 0
+    content.ScrollBarThickness = 4
+    content.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 120)
+    content.Visible = (tabName == "Main")
+    content.CanvasSize = UDim2.new(0, 0, 0, 600)
+    content.ZIndex = 102
+end
+
+local mainContent = contentFrame:FindFirstChild("MainContent")
+createToggle(mainContent, "King Mode (Auto Heal)", "KingMode", 10)
+createToggle(mainContent, "Anti-AFK", "AntiAFK", 55)
+
+local lockedBtn = Instance.new("TextButton", mainContent)
+lockedBtn.Size = UDim2.new(1, -20, 0, 40)
+lockedBtn.Position = UDim2.new(0, 10, 0, 110)
+lockedBtn.Text = "🔒 LOCKED! SKID"
+lockedBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+lockedBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+lockedBtn.Font = Enum.Font.GothamBold
+lockedBtn.TextSize = 16
+lockedBtn.BorderSizePixel = 0
+lockedBtn.ZIndex = 103
+
+local lockedCorner = Instance.new("UICorner", lockedBtn)
+lockedCorner.CornerRadius = UDim.new(0, 10)
+
+local movementContent = contentFrame:FindFirstChild("MovementContent")
+createToggle(movementContent, "Super Jump", "SuperJump", 10)
+createToggle(movementContent, "NoClip", "NoClip", 55)
+createToggle(movementContent, "Fly Mode", "FlyMode", 100)
+createToggle(movementContent, "Speed Boost", "SpeedBoost", 145)
+createToggle(movementContent, "Infinite Stamina", "InfiniteStamina", 190)
+
+local speedLabel = Instance.new("TextLabel", movementContent)
+speedLabel.Size = UDim2.new(1, -20, 0, 25)
+speedLabel.Position = UDim2.new(0, 10, 0, 240)
+speedLabel.BackgroundTransparency = 1
+speedLabel.Text = "Speed: 50"
+speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedLabel.Font = Enum.Font.Gotham
+speedLabel.TextSize = 14
+speedLabel.TextXAlignment = Enum.TextXAlignment.Left
+speedLabel.ZIndex = 103
+
+local speedSlider = Instance.new("Frame", movementContent)
+speedSlider.Size = UDim2.new(1, -20, 0, 8)
+speedSlider.Position = UDim2.new(0, 10, 0, 270)
+speedSlider.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+speedSlider.BorderSizePixel = 0
+speedSlider.ZIndex = 103
+
+local speedSliderCorner = Instance.new("UICorner", speedSlider)
+speedSliderCorner.CornerRadius = UDim.new(1, 0)
+
+local speedFill = Instance.new("Frame", speedSlider)
+speedFill.Size = UDim2.new(0.5, 0, 1, 0)
+speedFill.BackgroundColor3 = Color3.fromRGB(255, 50, 120)
+speedFill.BorderSizePixel = 0
+speedFill.ZIndex = 104
+
+local speedFillCorner = Instance.new("UICorner", speedFill)
+speedFillCorner.CornerRadius = UDim.new(1, 0)
+
+local espContent = contentFrame:FindFirstChild("ESPContent")
+createToggle(espContent, "ESP Players", "ESPMen", 10)
+createToggle(espContent, "ESP Names", "ESPName", 55)
+createToggle(espContent, "ESP Distance", "ESPDistance", 100)
+createToggle(espContent, "ESP Health Bar", "ESPHealthBar", 145)
+createToggle(espContent, "Show Time", "ESPTime", 190)
+createToggle(espContent, "Tracers", "Tracers", 235)
+
+local visualContent = contentFrame:FindFirstChild("VisualContent")
+createToggle(visualContent, "Fullbright", "Fullbright", 10)
+
+local fovLabel = Instance.new("TextLabel", visualContent)
+fovLabel.Size = UDim2.new(1, -20, 0, 25)
+fovLabel.Position = UDim2.new(0, 10, 0, 60)
+fovLabel.BackgroundTransparency = 1
+fovLabel.Text = "FOV: 70"
+fovLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+fovLabel.Font = Enum.Font.Gotham
+fovLabel.TextSize = 14
+fovLabel.TextXAlignment = Enum.TextXAlignment.Left
+fovLabel.ZIndex = 103
+
+local fovSlider = Instance.new("Frame", visualContent)
+fovSlider.Size = UDim2.new(1, -20, 0, 8)
+fovSlider.Position = UDim2.new(0, 10, 0, 90)
+fovSlider.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+fovSlider.BorderSizePixel = 0
+fovSlider.ZIndex = 103
+
+local fovSliderCorner = Instance.new("UICorner", fovSlider)
+fovSliderCorner.CornerRadius = UDim.new(1, 0)
+
+local fovFill = Instance.new("Frame", fovSlider)
+fovFill.Size = UDim2.new(0.35, 0, 1, 0)
+fovFill.BackgroundColor3 = Color3.fromRGB(255, 50, 120)
+fovFill.BorderSizePixel = 0
+fovFill.ZIndex = 104
+
+local fovFillCorner = Instance.new("UICorner", fovFill)
+fovFillCorner.CornerRadius = UDim.new(1, 0)
+
+local teleportContent = contentFrame:FindFirstChild("TeleportContent")
+createToggle(teleportContent, "Click TP (Ctrl+Click)", "ClickTP", 10)
+
+local tpBtn = Instance.new("TextButton", teleportContent)
+tpBtn.Size = UDim2.new(1, -20, 0, 45)
+tpBtn.Position = UDim2.new(0, 10, 0, 65)
+tpBtn.Text = "📍 Save & Teleport"
+tpBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+tpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+tpBtn.Font = Enum.Font.GothamBold
+tpBtn.TextSize = 16
+tpBtn.BorderSizePixel = 0
+tpBtn.ZIndex = 103
+
+local tpCorner = Instance.new("UICorner", tpBtn)
+tpCorner.CornerRadius = UDim.new(0, 10)
+
+local teleportPoint = nil
+local teleporting = false
+
+tpBtn.MouseButton1Click:Connect(function()
+    if teleporting or not plr.Character then return end
+    local hrp = plr.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
+    if not teleportPoint then
+        teleportPoint = hrp.Position
+        tpBtn.Text = "✅ Point Saved! Click to TP"
+        tpBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        notify("Saved!", "Teleport point saved!", 2)
+    else
+        teleporting = true
+        tpBtn.Text = "⏳ Teleporting..."
+        hrp.Anchored = true
+        plr.Character:SetPrimaryPartCFrame(CFrame.new(teleportPoint))
+        wait(3)
+        hrp.Anchored = false
+        tpBtn.Text = "📍 Save & Teleport"
+        tpBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+        teleportPoint = nil
+        teleporting = false
+        notify("Teleported!", "Successfully teleported!", 2)
+    end
+end)
+
+local infoContent = contentFrame:FindFirstChild("InfoContent")
+
+local leakedTitle = Instance.new("TextLabel", infoContent)
+leakedTitle.Size = UDim2.new(1, -20, 0, 80)
+leakedTitle.Position = UDim2.new(0, 10, 0, 40)
+leakedTitle.BackgroundTransparency = 1
+leakedTitle.Text = "🔓 LEAKED"
+leakedTitle.TextColor3 = Color3.fromRGB(255, 50, 120)
+leakedTitle.Font = Enum.Font.GothamBold
+leakedTitle.TextSize = 48
+leakedTitle.ZIndex = 103
+
+local discordBtn = Instance.new("TextButton", infoContent)
+discordBtn.Size = UDim2.new(1, -20, 0, 50)
+discordBtn.Position = UDim2.new(0, 10, 0, 140)
+discordBtn.Text = "💬 Join Our Discord :D (COPY)"
+discordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+discordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+discordBtn.Font = Enum.Font.GothamBold
+discordBtn.TextSize = 18
+discordBtn.BorderSizePixel = 0
+discordBtn.ZIndex = 103
+
+local discordCorner = Instance.new("UICorner", discordBtn)
+discordCorner.CornerRadius = UDim.new(0, 12)
+
+discordBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/aqS2kye6HC")
+    notify("Copied!", "Discord invite copied!", 3)
+    tween(discordBtn, {BackgroundColor3 = Color3.fromRGB(57, 255, 20)}, 0.2)
+    wait(0.2)
+    tween(discordBtn, {BackgroundColor3 = Color3.fromRGB(88, 101, 242)}, 0.2)
+end)
+
+tween(tabButtons["Main"], {BackgroundColor3 = Color3.fromRGB(255, 50, 120), TextColor3 = Color3.fromRGB(255, 255, 255)})
+
+local function toggleMainFrame()
+    if not scriptLoaded then return end
+    
+    if mainFrame.Visible then
+        mainFrame:TweenSizeAndPosition(
+            UDim2.new(0, 0, 0, 0),
+            UDim2.new(0.5, 0, 0.5, 0),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Quad,
+            0.3,
+            true,
+            function()
+                mainFrame.Visible = false
+                mainFrame.Size = UDim2.new(0, 550, 0, 400)
+                mainFrame.Position = UDim2.new(0.5, -275, 0.5, -200)end
+        )
+    else
+        mainFrame.Size = UDim2.new(0, 0, 0, 0)
+        mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+        mainFrame.Visible = true
+        mainFrame:TweenSizeAndPosition(
+            UDim2.new(0, 550, 0, 400),
+            UDim2.new(0.5, -275, 0.5, -200),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Quad,
+            0.3,
+            true
+        )
+    end
+end
+
+iconBtn.MouseButton1Click:Connect(function()
+    toggleMainFrame()
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+    mainFrame:TweenSizeAndPosition(
+        UDim2.new(0, 0, 0, 0),
+        UDim2.new(0.5, 0, 0.5, 0),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.3,
+        true,
+        function()
+            mainFrame.Visible = false
+            mainFrame.Size = UDim2.new(0, 550, 0, 400)
+            mainFrame.Position = UDim2.new(0.5, -275, 0.5, -200)
+        end
+    )
+end)
+
+local function addHoverEffect(button, normalColor, hoverColor)
+    button.MouseEnter:Connect(function()
+        tween(button, {BackgroundColor3 = hoverColor}, 0.2)
+    end)
+    button.MouseLeave:Connect(function()
+        tween(button, {BackgroundColor3 = normalColor}, 0.2)
+    end)
+end
+
+addHoverEffect(closeBtn, Color3.fromRGB(200, 50, 50), Color3.fromRGB(220, 70, 70))
+addHoverEffect(tpBtn, Color3.fromRGB(0, 120, 255), Color3.fromRGB(20, 140, 255))
+addHoverEffect(discordBtn, Color3.fromRGB(88, 101, 242), Color3.fromRGB(108, 121, 255))
+
+loadBtn.MouseButton1Click:Connect(function()
+    if scriptLoaded then return end
+    scriptLoaded = true
+    
+    loadBtn.Text = "⏳ LOADING..."
+    loadBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    
+    wait(0.5)
+    
+    loaderFrame:TweenSizeAndPosition(
+        UDim2.new(0, 0, 0, 0),
+        UDim2.new(0.5, 0, 0.5, 0),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.4,
+        true,
+        function()
+            loaderFrame:Destroy()
+        end
+    )
+    
+    wait(0.5)
+    
+    iconBtn.Visible = true
+    iconBtn.Size = UDim2.new(0, 0, 0, 0)
+    tween(iconBtn, {Size = UDim2.new(0, 60, 0, 60)}, 0.3)
+    
+    mainFrame.Size = UDim2.new(0, 0, 0, 0)
+    mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    mainFrame.Visible = true
+    mainFrame:TweenSizeAndPosition(
+        UDim2.new(0, 550, 0, 400),
+        UDim2.new(0.5, -275, 0.5, -200),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.5,
+        true
+    )
+    
+    notify("Thirst Leak", "Script loaded successfully!", 3)
+end)
+
+local statusFrame = Instance.new("Frame", mainFrame)
+statusFrame.Size = UDim2.new(1, -20, 0, 20)
+statusFrame.Position = UDim2.new(0, 10, 1, -30)
+statusFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+statusFrame.BorderSizePixel = 0
+statusFrame.ZIndex = 101
+
+local statusCorner = Instance.new("UICorner", statusFrame)
+statusCorner.CornerRadius = UDim.new(0, 10)
+
+local statusLabel = Instance.new("TextLabel", statusFrame)
+statusLabel.Size = UDim2.new(1, -10, 1, 0)
+statusLabel.Position = UDim2.new(0, 5, 0, 0)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "🟢 Status: Ready | discord.gg/GSTfEVvwDK"
+statusLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextSize = 12
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.ZIndex = 102
+
+run.RenderStepped:Connect(function()
+    if not scriptLoaded then return end
+    
+    if SETTINGS.KingMode and plr.Character then
+        local hum = plr.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum and hum.Health < hum.MaxHealth then
+            hum.Health = hum.MaxHealth
+            hum.PlatformStand = false
+            hum.Sit = false
+        end
+    end
+    
+    if SETTINGS.InfiniteStamina and plr.Character then
+        local hum = plr.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum then
+            hum.WalkSpeed = SETTINGS.SpeedBoost and SETTINGS.SpeedValue or 16
+        end
+    end
+end)
+
+uis.JumpRequest:Connect(function()
+    if not scriptLoaded then return end
+    if SETTINGS.SuperJump then
+        local hum = plr.Character and plr.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum then
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            wait(0.1)
+            hum.Parent.HumanoidRootPart.Velocity = Vector3.new(0, 150, 0)
+        end
+    end
+end)
+
+run.Stepped:Connect(function()
+    if not scriptLoaded then return end
+    if SETTINGS.NoClip and plr.Character then
+        for _, v in pairs(plr.Character:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+    end
+end)
+
+local flying = false
+local flyConnection
+
+local function startFlying()
+    flying = true
+    local char = plr.Character
+    if not char then return end
+    
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
+    local bg = Instance.new("BodyGyro", hrp)
+    bg.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+    bg.P = 9e4
+    
+    local bv = Instance.new("BodyVelocity", hrp)
+    bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+    bv.Velocity = Vector3.new(0, 0, 0)
+    
+    flyConnection = run.Heartbeat:Connect(function()
+        if not flying or not SETTINGS.FlyMode then
+            bg:Destroy()
+            bv:Destroy()
+            if flyConnection then flyConnection:Disconnect() end
+            flying = false
+            return
+        end
+        
+        local cam = workspace.CurrentCamera
+        bg.CFrame = cam.CFrame
+        
+        local speed = flySpeed * 50
+        local velocity = Vector3.new(0, 0, 0)
+        
+        if uis:IsKeyDown(Enum.KeyCode.W) then
+            velocity = velocity + (cam.CFrame.LookVector * speed)
+        end
+        if uis:IsKeyDown(Enum.KeyCode.S) then
+            velocity = velocity - (cam.CFrame.LookVector * speed)
+        end
+        if uis:IsKeyDown(Enum.KeyCode.A) then
+            velocity = velocity - (cam.CFrame.RightVector * speed)
+        end
+        if uis:IsKeyDown(Enum.KeyCode.D) then
+            velocity = velocity + (cam.CFrame.RightVector * speed)
+        end
+        if uis:IsKeyDown(Enum.KeyCode.Space) then
+            velocity = velocity + Vector3.new(0, speed, 0)
+        end
+        if uis:IsKeyDown(Enum.KeyCode.LeftShift) then
+            velocity = velocity - Vector3.new(0, speed, 0)
+        end
+        
+        bv.Velocity = velocity
+    end)
+end
+
+spawn(function()
+    while wait(0.1) do
+        if not scriptLoaded then continue end
+        if SETTINGS.FlyMode and not flying then
+            pcall(startFlying)
+        elseif not SETTINGS.FlyMode and flying then
+            flying = false
+        end
+    end
+end)
+
+run.Heartbeat:Connect(function()
+    if not scriptLoaded then return end
+    if SETTINGS.SpeedBoost and plr.Character then
+        local hum = plr.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum then
+            hum.WalkSpeed = SETTINGS.SpeedValue
+        end
+    elseif not SETTINGS.SpeedBoost and plr.Character then
+        local hum = plr.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum and hum.WalkSpeed ~= 16 then
+            hum.WalkSpeed = 16
+        end
+    end
+end)
+
+run.RenderStepped:Connect(function()
+    if not scriptLoaded then return end
+    
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p ~= plr and p.Character then
+            local char = p.Character
+            
+            local esp = char:FindFirstChild("ThirstESP")
+            if SETTINGS.ESPMen and not esp then
+                local h = Instance.new("Highlight", char)
+                h.Name = "ThirstESP"
+                h.FillColor = Color3.fromRGB(255, 50, 120)
+                h.OutlineColor = Color3.fromRGB(255, 255, 255)
+                h.FillTransparency = 0.5
+                h.OutlineTransparency = 0
+            elseif not SETTINGS.ESPMen and esp then
+                esp:Destroy()
+            end
+            
+            if SETTINGS.ESPName then
+                if not char:FindFirstChild("ThirstName") then
+                    local bill = Instance.new("BillboardGui", char)
+                    bill.Name = "ThirstName"
+                    bill.Adornee = char:FindFirstChild("Head")
+                    bill.Size = UDim2.new(0, 200, 0, 50)
+                    bill.StudsOffset = Vector3.new(0, 2, 0)
+                    bill.AlwaysOnTop = true
+                    
+                    local txt = Instance.new("TextLabel", bill)
+                    txt.Size = UDim2.new(1, 0, 1, 0)
+                    txt.Text = p.Name
+                    txt.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    txt.BackgroundTransparency = 1
+                    txt.TextScaled = true
+                    txt.Font = Enum.Font.GothamBold
+                    txt.TextStrokeTransparency = 0.5
+                end
+            else
+                local tag = char:FindFirstChild("ThirstName")
+                if tag then tag:Destroy() end
+            end
+            
+            if SETTINGS.ESPDistance then
+                local nameTag = char:FindFirstChild("ThirstName")
+                if nameTag and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    local distance = (plr.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
+                    nameTag.TextLabel.Text = p.Name .. "\n[" .. math.floor(distance) .. " studs]"
+                end
+            end
+            
+            if SETTINGS.ESPHealthBar then
+                if not char:FindFirstChild("ThirstHealth") then
+                    local bill = Instance.new("BillboardGui", char)
+                    bill.Name = "ThirstHealth"
+                    bill.Adornee = char:FindFirstChild("Head")
+                    bill.Size = UDim2.new(0, 100, 0, 10)
+                    bill.StudsOffset = Vector3.new(0, 3.5, 0)
+                    bill.AlwaysOnTop = true
+                    
+                    local bg = Instance.new("Frame", bill)
+                    bg.Size = UDim2.new(1, 0, 1, 0)
+                    bg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                    bg.BorderSizePixel = 0
+                    
+                    local fill = Instance.new("Frame", bg)
+                    fill.Name = "Fill"
+                    fill.Size = UDim2.new(1, 0, 1, 0)
+                    fill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+                    fill.BorderSizePixel = 0
+                end
+                
+                local healthBar = char:FindFirstChild("ThirstHealth")
+                if healthBar then
+                    local hum = char:FindFirstChildWhichIsA("Humanoid")
+                    if hum then
+                        local healthPercent = hum.Health / hum.MaxHealth
+                        healthBar.Frame.Fill.Size = UDim2.new(healthPercent, 0, 1, 0)
+                        
+                        if healthPercent > 0.5 then
+                            healthBar.Frame.Fill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+                        elseif healthPercent > 0.25 then
+                            healthBar.Frame.Fill.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+                        else
+                            healthBar.Frame.Fill.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                        end
+                    end
+                end
+            else
+                local healthBar = char:FindFirstChild("ThirstHealth")
+                if healthBar then healthBar:Destroy() end
+            end
+            
+            if SETTINGS.Tracers then
+                if not char:FindFirstChild("ThirstTracer") then
+                    local attach = Instance.new("Attachment", char:FindFirstChild("HumanoidRootPart"))
+                    attach.Name = "ThirstTracer"
+                    
+                    local beam = Instance.new("Beam", attach)
+                    beam.Attachment0 = attach
+                    beam.Color = ColorSequence.new(Color3.fromRGB(255, 50, 120))
+                    beam.FaceCamera = true
+                    beam.Width0 = 0.1
+                    beam.Width1 = 0.1
+                    
+                    if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                        local attach2 = Instance.new("Attachment", plr.Character.HumanoidRootPart)
+                        attach2.Name = "ThirstTracerOrigin"
+                        beam.Attachment1 = attach2
+                    end
+                end
+            else
+                local tracer = char:FindFirstChild("ThirstTracer")
+                if tracer then tracer:Destroy() end
+                if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    local origin = plr.Character.HumanoidRootPart:FindFirstChild("ThirstTracerOrigin")
+                    if origin then origin:Destroy() end
+                end
+            end
+        end
+    end
+end)
+
+spawn(function()
+    while wait(0.5) do
+        if not scriptLoaded then continue end
+        if SETTINGS.Fullbright then
+            game:GetService("Lighting").Brightness = 2
+            game:GetService("Lighting").ClockTime = 14
+            game:GetService("Lighting").FogEnd = 100000
+            game:GetService("Lighting").GlobalShadows = false
+            game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+        end
+    end
+end)
+
+workspace.CurrentCamera:GetPropertyChangedSignal("FieldOfView"):Connect(function()
+    if scriptLoaded and workspace.CurrentCamera.FieldOfView ~= SETTINGS.FOVValue then
+        originalFOV = workspace.CurrentCamera.FieldOfView
+    end
+end)
+
+spawn(function()
+    while wait(0.1) do
+        if scriptLoaded then
+            workspace.CurrentCamera.FieldOfView = SETTINGS.FOVValue
+        end
+    end
+end)
+
+local mouse = plr:GetMouse()
+mouse.Button1Down:Connect(function()
+    if not scriptLoaded then return end
+    if SETTINGS.ClickTP and uis:IsKeyDown(Enum.KeyCode.LeftControl) then
+        if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            plr.Character.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+            notify("Teleported!", "Ctrl+Click TP successful!", 2)
+        end
+    end
+end)
+
+spawn(function()
+    while wait(60) do
+        if not scriptLoaded then continue end
+        if SETTINGS.AntiAFK then
+            local VirtualUser = game:GetService("VirtualUser")
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end
+    end
+end)
+
+local function blurGodText(obj)
+    pcall(function()
+        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+            if obj.Text:match("[Gg][Oo][Dd]") then
+                obj.Text = string.gsub(obj.Text, "[Gg][Oo][Dd]", "***")
+            end
+        end
+    end)
+end
+
+local function monitorDescendants(parent)
+    pcall(function()
+        for _, obj in pairs(parent:GetDescendants()) do
+            blurGodText(obj)
+        end
+        parent.DescendantAdded:Connect(function(desc)
+            task.wait(0.1)
+            blurGodText(desc)
+        end)
+    end)
+end
+
+monitorDescendants(game.CoreGui)
+monitorDescendants(plr.PlayerGui)
+monitorDescendants(workspace)
+
+notify("Thirst Leak", "Press LOAD LEAK to start!", 5)
