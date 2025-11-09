@@ -30,7 +30,7 @@ local originalFOV = 70
 local scriptLoaded = false
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "ThirstLeak"
+gui.Name = "JaneqHub"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -89,7 +89,7 @@ local loaderTitle = Instance.new("TextLabel", loaderFrame)
 loaderTitle.Size = UDim2.new(1, 0, 0, 45)
 loaderTitle.Position = UDim2.new(0, 0, 0, 15)
 loaderTitle.BackgroundTransparency = 1
-loaderTitle.Text = "L SCRIPT"
+loaderTitle.Text = "Astro Hub Instant Steal"
 loaderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 loaderTitle.Font = Enum.Font.GothamBold
 loaderTitle.TextSize = 28
@@ -98,7 +98,7 @@ local loaderSubtitle = Instance.new("TextLabel", loaderFrame)
 loaderSubtitle.Size = UDim2.new(1, 0, 0, 25)
 loaderSubtitle.Position = UDim2.new(0, 0, 0, 60)
 loaderSubtitle.BackgroundTransparency = 1
-loaderSubtitle.Text = "WITH KEY"
+loaderSubtitle.Text = "PAID (leak = ban)"
 loaderSubtitle.TextColor3 = Color3.fromRGB(255, 50, 120)
 loaderSubtitle.Font = Enum.Font.GothamBold
 loaderSubtitle.TextSize = 16
@@ -107,7 +107,7 @@ local loaderCredit = Instance.new("TextLabel", loaderFrame)
 loaderCredit.Size = UDim2.new(1, 0, 0, 20)
 loaderCredit.Position = UDim2.new(0, 0, 0, 85)
 loaderCredit.BackgroundTransparency = 1
-loaderCredit.Text = "MADE BY AI SKID"
+loaderCredit.Text = "Made by Janeq"
 loaderCredit.TextColor3 = Color3.fromRGB(150, 150, 150)
 loaderCredit.Font = Enum.Font.Gotham
 loaderCredit.TextSize = 12
@@ -115,7 +115,7 @@ loaderCredit.TextSize = 12
 local loadBtn = Instance.new("TextButton", loaderFrame)
 loadBtn.Size = UDim2.new(0, 260, 0, 50)
 loadBtn.Position = UDim2.new(0, 30, 0, 125)
-loadBtn.Text = "🚀 LOAD LEAK"
+loadBtn.Text = "🚀 LOAD SCRIPT"
 loadBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 120)
 loadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 loadBtn.Font = Enum.Font.GothamBold
@@ -156,7 +156,7 @@ iconCorner.CornerRadius = UDim.new(0, 15)
 local iconText = Instance.new("TextLabel", iconBtn)
 iconText.Size = UDim2.new(1, 0, 1, 0)
 iconText.BackgroundTransparency = 1
-iconText.Text = "T"
+iconText.Text = "AH"
 iconText.TextColor3 = Color3.fromRGB(255, 50, 120)
 iconText.Font = Enum.Font.GothamBold
 iconText.TextSize = 36
@@ -221,7 +221,7 @@ local headerTitle = Instance.new("TextLabel", header)
 headerTitle.Size = UDim2.new(0, 300, 1, 0)
 headerTitle.Position = UDim2.new(0, 20, 0, 0)
 headerTitle.BackgroundTransparency = 1
-headerTitle.Text = "Leaked By Thirst"
+headerTitle.Text = "Made by Janeq"
 headerTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 headerTitle.Font = Enum.Font.GothamBold
 headerTitle.TextSize = 20
@@ -232,7 +232,7 @@ local headerSub = Instance.new("TextLabel", header)
 headerSub.Size = UDim2.new(0, 200, 1, 0)
 headerSub.Position = UDim2.new(0, 195, 0, 0)
 headerSub.BackgroundTransparency = 1
-headerSub.Text = "discord.gg/GSTfEVvwDK"
+headerSub.Text = "Astro Hub Property"
 headerSub.TextColor3 = Color3.fromRGB(255, 50, 120)
 headerSub.Font = Enum.Font.Gotham
 headerSub.TextSize = 11
@@ -398,8 +398,8 @@ createToggle(mainContent, "Anti-AFK", "AntiAFK", 55)
 local lockedBtn = Instance.new("TextButton", mainContent)
 lockedBtn.Size = UDim2.new(1, -20, 0, 40)
 lockedBtn.Position = UDim2.new(0, 10, 0, 110)
-lockedBtn.Text = "🔒 LOCKED! SKID"
-lockedBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+lockedBtn.Text = "🔒 LOCKED! SID"
+lockedBtn.Background3 = Color3.fromRGB(60, 60, 75)
 lockedBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
 lockedBtn.Font = Enum.Font.GothamBold
 lockedBtn.TextSize = 16
@@ -493,7 +493,7 @@ createToggle(teleportContent, "Click TP (Ctrl+Click)", "ClickTP", 10)
 local tpBtn = Instance.new("TextButton", teleportContent)
 tpBtn.Size = UDim2.new(1, -20, 0, 45)
 tpBtn.Position = UDim2.new(0, 10, 0, 65)
-tpBtn.Text = "📍 Save & Teleport"
+tpBtn.Text = "📍 Instant Steal Loader"
 tpBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
 tpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 tpBtn.Font = Enum.Font.GothamBold
@@ -514,17 +514,17 @@ tpBtn.MouseButton1Click:Connect(function()
     
     if not teleportPoint then
         teleportPoint = hrp.Position
-        tpBtn.Text = "✅ Point Saved! Click to TP"
+        tpBtn.Text = "✅ Loaded! Instant Steal!"
         tpBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
         notify("Saved!", "Teleport point saved!", 2)
     else
         teleporting = true
-        tpBtn.Text = "⏳ Teleporting..."
+        tpBtn.Text = "⏳ Stealing..."
         hrp.Anchored = true
         plr.Character:SetPrimaryPartCFrame(CFrame.new(teleportPoint))
         wait(3)
         hrp.Anchored = false
-        tpBtn.Text = "📍 Save & Teleport"
+        tpBtn.Text = "📍 Load Again!"
         tpBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
         teleportPoint = nil
         teleporting = false
