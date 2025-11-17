@@ -1,6 +1,6 @@
 -- This file was generated with UnveilR 2.1.5 at discord.gg/threaded or discord.gg/aqfudJEEeE (hookOp is off sadly).
 local fenv = getfenv()
-local args29 = { ... }
+local args29  
 local var43 = game:GetService("Players")
 local var44 = var43.LocalPlayer
 local var45 = game:GetService("RunService")
@@ -90,7 +90,7 @@ local var89 = var88(0.5, 0)
 var87.CornerRadius = var89
 var87.Parent = var80
 local var90 = var80.MouseButton1Click:Connect(function(...)
-    local args2 = { ... }
+    local args2  
     var50.Visible = false
 end)
 local var91 = Instance.new("TextButton")
@@ -125,7 +125,7 @@ var105.Thickness = 1
 var105.Transparency = 0.7
 var105.Parent = var91
 local var116 = var91.MouseButton1Down:Connect(function(...)
-    local args3 = { ... }
+    local args3  
     local var108 = fenv.TweenInfo
     local var109 = var108.new
     local var110 = var109(0.2)
@@ -138,7 +138,7 @@ local var116 = var91.MouseButton1Down:Connect(function(...)
     local var115 = var113:Play()
 end)
 local var125 = var91.MouseButton1Up:Connect(function(...)
-    local args4 = { ... }
+    local args4  
     local var117 = fenv.TweenInfo
     local var118 = var117.new
     local var119 = var118(0.3)
@@ -151,7 +151,7 @@ local var125 = var91.MouseButton1Up:Connect(function(...)
     local var124 = var122:Play()
 end)
 local var134 = var91.MouseLeave:Connect(function(...)
-    local args5 = { ... }
+    local args5  
     local var126 = fenv.TweenInfo
     local var127 = var126.new
     local var128 = var127(0.3)
@@ -164,13 +164,13 @@ local var134 = var91.MouseLeave:Connect(function(...)
     local var133 = var131:Play()
 end)
 local var146 = var91.MouseButton1Click:Connect(function(...)
-    local args7 = { ... }
+    local args7  
     var91.Text = "Speed Booster: ON"
     local var135 = Color3.fromRGB
     local var136 = var135(50, 200, 50)
     var91.BackgroundColor3 = var136
     local var145 = var45.Heartbeat:Connect(function(...)
-        local args7 = { ... }
+        local args7  
         local var137 = var44.Character
         local var138 = var137:WaitForChild("HumanoidRootPart")
         local var139 = var137:FindFirstChildOfClass("Humanoid")
@@ -179,7 +179,7 @@ local var146 = var91.MouseButton1Click:Connect(function(...)
         local var142 = var140:FindFirstChildOfClass("Humanoid")
         local var143 = var142.MoveDirection
         local var144 = var143.Magnitude
-        error("[script]: attempt to compare number < table") -- Internal Error
+        print("SIGMA") -- Internal Error
     end)
 end)
 local var147 = Instance.new("TextButton")
@@ -214,7 +214,7 @@ var161.Thickness = 1
 var161.Transparency = 0.7
 var161.Parent = var147
 local var172 = var147.MouseButton1Down:Connect(function(...)
-    local args8 = { ... }
+    local args8  
     local var164 = fenv.TweenInfo
     local var165 = var164.new
     local var166 = var165(0.2)
@@ -227,7 +227,7 @@ local var172 = var147.MouseButton1Down:Connect(function(...)
     local var171 = var169:Play()
 end)
 local var181 = var147.MouseButton1Up:Connect(function(...)
-    local args9 = { ... }
+    local args9  
     local var173 = fenv.TweenInfo
     local var174 = var173.new
     local var175 = var174(0.3)
@@ -240,7 +240,7 @@ local var181 = var147.MouseButton1Up:Connect(function(...)
     local var180 = var178:Play()
 end)
 local var190 = var147.MouseLeave:Connect(function(...)
-    local args10 = { ... }
+    local args10  
     local var182 = fenv.TweenInfo
     local var183 = var182.new
     local var184 = var183(0.3)
@@ -253,7 +253,7 @@ local var190 = var147.MouseLeave:Connect(function(...)
     local var189 = var187:Play()
 end)
 local var203 = var147.MouseButton1Click:Connect(function(...)
-    local args12 = { ... }
+    local args12  
     var147.Text = "No Knockback: ON"
     local var191 = Color3.fromRGB
     local var192 = var191(50, 200, 50)
@@ -262,18 +262,18 @@ local var203 = var147.MouseButton1Click:Connect(function(...)
     local var194 = var193:FindFirstChild("HumanoidRootPart")
     local var195 = var193:FindFirstChildOfClass("Humanoid")
     local var202 = var45.Heartbeat:connect(function(...)
-        local args12 = { ... }
+        local args12  
         local var196 = var194.Velocity
         local var197 = Vector3.new
         local var198 = var196.X
         local var199 = var196.Z
         local var200 = var197(var198, 0, var199)
         local var201 = var200.Magnitude
-        error("[script]: attempt to compare number < table") -- Internal Error
+        print("SIGMA") -- Internal Error
     end)
 end)
 local var217 = var44.CharacterAdded:Connect(function(...)
-    local args14 = { ... }
+    local args14  
     local var204 = task.wait(1)
     local var205 = var44.Character
     local var206 = var205:FindFirstChild("HumanoidRootPart")
@@ -282,14 +282,14 @@ local var217 = var44.CharacterAdded:Connect(function(...)
     local var209 = var208(var202)
     local  = var202:Disconnect()
     local var216 = var45.Heartbeat:connect(function(...)
-        local args14 = { ... }
+        local args14  
         local var210 = var206.Velocity
         local var211 = Vector3.new
         local var212 = var210.X
         local var213 = var210.Z
         local var214 = var211(var212, 0, var213)
         local var215 = var214.Magnitude
-        error("[script]: attempt to compare number < table") -- Internal Error
+        print("SIGMA") -- Internal Error
     end)
 end)
 local var218 = Instance.new("TextButton")
@@ -324,7 +324,7 @@ var232.Thickness = 1
 var232.Transparency = 0.7
 var232.Parent = var218
 local var243 = var218.MouseButton1Down:Connect(function(...)
-    local args15 = { ... }
+    local args15  
     local var235 = fenv.TweenInfo
     local var236 = var235.new
     local var237 = var236(0.2)
@@ -337,7 +337,7 @@ local var243 = var218.MouseButton1Down:Connect(function(...)
     local var242 = var240:Play()
 end)
 local var252 = var218.MouseButton1Up:Connect(function(...)
-    local args16 = { ... }
+    local args16  
     local var244 = fenv.TweenInfo
     local var245 = var244.new
     local var246 = var245(0.3)
@@ -350,7 +350,7 @@ local var252 = var218.MouseButton1Up:Connect(function(...)
     local var251 = var249:Play()
 end)
 local var261 = var218.MouseLeave:Connect(function(...)
-    local args17 = { ... }
+    local args17  
     local var253 = fenv.TweenInfo
     local var254 = var253.new
     local var255 = var254(0.3)
@@ -363,7 +363,7 @@ local var261 = var218.MouseLeave:Connect(function(...)
     local var260 = var258:Play()
 end)
 local var273 = var218.MouseButton1Click:Connect(function(...)
-    local args18 = { ... }
+    local args18  
     var218.Text = "Low Gravity: ON"
     local var262 = Color3.fromRGB
     local var263 = var262(50, 200, 50)
@@ -413,7 +413,7 @@ var288.Thickness = 1
 var288.Transparency = 0.7
 var288.Parent = var274
 local var299 = var274.MouseButton1Down:Connect(function(...)
-    local args19 = { ... }
+    local args19  
     local var291 = fenv.TweenInfo
     local var292 = var291.new
     local var293 = var292(0.2)
@@ -426,7 +426,7 @@ local var299 = var274.MouseButton1Down:Connect(function(...)
     local var298 = var296:Play()
 end)
 local var308 = var274.MouseButton1Up:Connect(function(...)
-    local args20 = { ... }
+    local args20  
     local var300 = fenv.TweenInfo
     local var301 = var300.new
     local var302 = var301(0.3)
@@ -439,7 +439,7 @@ local var308 = var274.MouseButton1Up:Connect(function(...)
     local var307 = var305:Play()
 end)
 local var317 = var274.MouseLeave:Connect(function(...)
-    local args21 = { ... }
+    local args21  
     local var309 = fenv.TweenInfo
     local var310 = var309.new
     local var311 = var310(0.3)
@@ -452,13 +452,13 @@ local var317 = var274.MouseLeave:Connect(function(...)
     local var316 = var314:Play()
 end)
 local var336 = var274.MouseButton1Click:Connect(function(...)
-    local args23 = { ... }
+    local args23  
     var274.Text = "Hitbox Expander: ON"
     local var318 = Color3.fromRGB
     local var319 = var318(180, 0, 255)
     var274.BackgroundColor3 = var319
     local var335 = var45.RenderStepped:Connect(function(...)
-        local args23 = { ... }
+        local args23  
         local var320 = var44.Character
         local var321 = var44.Character
         local var322 = var321:FindFirstChild("HumanoidRootPart")
@@ -475,7 +475,7 @@ local var336 = var274.MouseButton1Click:Connect(function(...)
             local var332 = var322.Position
             local var333 = var331 - var332
             local var334 = var333.Magnitude
-        error("[script]: attempt to compare table < number") -- Internal Error
+            print("rizz") -- Internal Error
         end
     end)
 end)
@@ -511,7 +511,7 @@ var351.Thickness = 1
 var351.Transparency = 0.7
 var351.Parent = var337
 local var362 = var337.MouseButton1Down:Connect(function(...)
-    local args24 = { ... }
+    local args24  
     local var354 = fenv.TweenInfo
     local var355 = var354.new
     local var356 = var355(0.2)
@@ -524,7 +524,7 @@ local var362 = var337.MouseButton1Down:Connect(function(...)
     local var361 = var359:Play()
 end)
 local var371 = var337.MouseButton1Up:Connect(function(...)
-    local args25 = { ... }
+    local args25  
     local var363 = fenv.TweenInfo
     local var364 = var363.new
     local var365 = var364(0.3)
@@ -537,7 +537,7 @@ local var371 = var337.MouseButton1Up:Connect(function(...)
     local var370 = var368:Play()
 end)
 local var380 = var337.MouseLeave:Connect(function(...)
-    local args26 = { ... }
+    local args26  
     local var372 = fenv.TweenInfo
     local var373 = var372.new
     local var374 = var373(0.3)
@@ -550,7 +550,7 @@ local var380 = var337.MouseLeave:Connect(function(...)
     local var379 = var377:Play()
 end)
 local var407 = var337.MouseButton1Click:Connect(function(...)
-    local args28 = { ... }
+    local args28  
     var337.Text = "Desync (No Cloner): ON"
     local var381 = Color3.fromRGB
     local var382 = var381(200, 50, 50)
@@ -558,7 +558,7 @@ local var407 = var337.MouseButton1Click:Connect(function(...)
     local var383 = var44.Character
     local var384 = var383:WaitForChild("HumanoidRootPart")
     task.spawn(function(...)
-        local args28 = { ... }
+        local args28 
         local var385 = fenv.setfflag
         local var386 = var385("WorldStepsOffsetAdjustRate", "-1")
         local var387 = task.wait(1)
@@ -586,7 +586,7 @@ local var407 = var337.MouseButton1Click:Connect(function(...)
     end)
 end)
 local var410 = var44.CharacterAdded:connect(function(...)
-    local args29 = { ... }
+    
     var337.Text = "Desync (No Cloner): OFF"
     local var408 = Color3.fromRGB
     local var409 = var408(30, 30, 30)
